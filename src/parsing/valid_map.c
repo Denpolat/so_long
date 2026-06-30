@@ -6,13 +6,13 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/30 02:37:31 by denpolat          #+#    #+#             */
-/*   Updated: 2026/06/30 05:01:37 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/06/30 23:04:07 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static int	check_rectangle(char **map)
+static int	check_rectangle(t_game *game)
 {
 	int	firts_largeur;
 	int	i;
@@ -20,15 +20,14 @@ static int	check_rectangle(char **map)
 
 	i = 0;
 	j = 0;
-	while (map[i][j] != '\0')
+	while (game->map[i][j] != '\0')
 		j++;
 	firts_largeur = j;
-	j = 0;
 	i = 0;
-	while (map[i] != NULL)
+	while (game->map[i] != NULL)
 	{
 		j = 0;
-		while (map[i][j] != '\0')
+		while (game->map[i][j] != '\0')
 		{
 			j++;
 		}
@@ -40,7 +39,7 @@ static int	check_rectangle(char **map)
 }
 
 
-static int	is_one(char **map)
+static int	is_one(t_game *game)
 {
 	int	i;
 	int	j;
@@ -49,39 +48,72 @@ static int	is_one(char **map)
 
 	i = 0;
 	j = 0;
-	last_i = 0;
-	last_j = ft_strlen(map[0]) - 1;
-	while (map[last_i] != NULL)
+	last_i = game->nb_lignes - 1;
+	last_j = game->nb_cols - 1;
+	while (j <= last_j)
 		last_i++;
 	last_i = last_i - 1;
 	while (j <= last_j)
 	{
-		if (map[0][j] != '1' || map[last_i][j] != '1')
+		if (game->map[0][j] != '1' || game->map[last_i][j] != '1')
 			return (0);
 		j++;
 	}
 	while (i <= last_i)
 	{
-		if (map[i][0] != '1' || map[i][last_j] != '1')
+		if (game->map[i][0] != '1' || game->map[i][last_j] != '1')
 			return (0);
 		i++;
 	}
 	return (1);
 }
-
-void	valid_map(char	**map_a_valid)
+static int	valid_content(t_game *game)
 {
-	if (!check_rectangle(map_a_valid))
+	int	i;
+	int	j;
+
+	i = 0;
+	while (game->map[i] != NULL)
+	{
+		j = 0;
+		while (game->map[i][j])
+		{
+			if (game->map[i][j] != '0' && game->map[i][j] != '1'
+				 && game->map[i][j] != 'C'&& game->map[i][j] != 'E'
+				  && game->map[i][j] != 'P')
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+
+static int	count_valid(t_game *game)
+{
+	if (!count_arg(game->map, 0, 0, 0))
+		return (0);
+	return (1);
+}
+
+void	valid_map(t_game *game)
+{
+	if (!check_rectangle(game))
 	{
 		ft_putstr_fd("Error\nla map n est pas un rectangle chef\n", 2);
-		free_map(map_a_valid);
+		free_map(game->map);
 		exit(1);
 	}
-	if (!is_one)
+	else if (!is_one)
 	{
 		ft_putstr_fd("Error\nles murs sont pas des 1 chef\n", 2);
-		free_map(map_a_valid);
+		free_map(game->map);
 		exit(1);
 	}
-	
+	else if (!count_valid(game))
+	{
+		ft_putstr_fd("Error\npas les bons char chef\n", 2);
+		free_map(game->map);
+		exit(1);
+	}
 }

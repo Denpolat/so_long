@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 01:05:17 by denpolat          #+#    #+#             */
-/*   Updated: 2026/06/30 02:47:55 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/01 00:14:00 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,32 @@ static int	extension_check(char *file_name, int taille)
 		return (0);
 }
 
-static char	**store_map(int fd)
+static void	store_map(t_game *game, int fd)
 {
-	char	**map;
 	char	*ligne;
 	int		i;
 
-	map = NULL;
+	game->map = NULL;
 	i = 0;
 	ligne = get_next_line(fd);
 	while (ligne != NULL)
 	{
-		map = realloc(map, sizeof(char *) * (i + 2));
-		map[i] = ligne;
-		map[i + 1] = NULL;
+		game->map = realloc(game->map, sizeof(char *) * (i + 2));
+		game->map[i] = ligne;
+		game->map[i + 1] = NULL;
 		i++;
 		ligne = get_next_line(fd);
 	}
-	return (map);
+	game->nb_lignes = i;
+	if (game->map[0][game->nb_cols - 1] == '\n')
+		game->nb_cols--;
 }
 
 void	parse_map(char *file_name)
 {
 	size_t len;
 	int		fd;
-	char	**map;
+	t_game	game;
 
 	len = ft_strlen(file_name);
 	if (!extension_check(file_name, len))
@@ -60,7 +61,7 @@ void	parse_map(char *file_name)
 		ft_putstr_fd("Error\nimpossible d'ouvrir le fichier chef\n", 2);
 		exit(1);
 	}
-	map = store_map(fd);
+	store_map(&game, fd);
 	close(fd);
-	valid_map(map);
+	valid_map(&game);
 }
