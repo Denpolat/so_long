@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/30 02:37:31 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/01 03:33:19 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/01 04:40:36 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,27 @@ static int	is_one(t_game *game)
 	return (1);
 }
 
-static int	count_arg(t_game *game, int p, int e, int c)
+static int	check_char(t_game *game, int i, int j)
+{
+	char	c;
+
+	c = game->map[i][j];
+	if (c == 'P')
+	{
+		game->nb_player++;
+		game->player_x = j;
+		game->player_y = i;
+	}
+	else if (c == 'E')
+		game->nb_exit++;
+	else if (c == 'C')
+		game->nb_collectibles++;
+	else if (c != '0' && c != '1')
+		return (0);
+	return (1); 
+}
+
+static int	count_arg(t_game *game)
 {
 	int	i;
 	int	j;
@@ -63,26 +83,14 @@ static int	count_arg(t_game *game, int p, int e, int c)
 		j = 0;
 		while (game->map[i][j])
 		{
-			if (game->map[i][j] == 'P')
-				p++;
-			else if (game->map[i][j] == 'E')
-				e++;
-			else if (game->map[i][j] == 'C')
-				c++;
-			else if (game->map[i][j] != '0' && game->map[i][j] != '1')
+			if (!check_char(game, i, j))
 				return (0);
 			j++;
 		}
 		i++;
 	}
-	if (p != 1 || e != 1 || c < 1)
-		return (0);
-	return (1);
-}
-
-static int	count_valid(t_game *game)
-{
-	if (!count_arg(game, 0, 0, 0))
+	if (game->nb_player != 1 || game->nb_exit != 1 ||
+		 game->nb_collectibles < 1)
 		return (0);
 	return (1);
 }
@@ -92,19 +100,25 @@ void	valid_map(t_game *game)
 	if (!check_rectangle(game))
 	{
 		ft_putstr_fd("Error\nla map n est pas un rectangle chef\n", 2);
-		free_map(game->map);
+		free_game(game);
 		exit(1);
 	}
 	else if (!is_one(game))
 	{
 		ft_putstr_fd("Error\nles murs sont pas des 1 chef\n", 2);
-		free_map(game->map);
+		free_game(game);
 		exit(1);
 	}
-	else if (!count_valid(game))
+	else if (!count_arg(game))
 	{
 		ft_putstr_fd("Error\npas les bons char chef\n", 2);
-		free_map(game->map);
+		free_game(game);
+		exit(1);
+	}
+	else if (!flood_fill(game))
+	{
+		ft_putstr_fd("Error\nmap invalide chef\n", 2);
+		free_game(game);
 		exit(1);
 	}
 }

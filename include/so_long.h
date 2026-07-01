@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 23:52:14 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/01 01:34:42 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/01 04:31:15 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,14 @@ typedef struct s_game
 	int		player_x;
 	int		player_y;
 	int		nb_collectibles;
+	int		nb_exit;
+	int		nb_player;
 }	t_game;
 
 void	parse_map(char *file_name);
 void	valid_map(t_game *game);
+int	flood_fill(t_game *game);
+
 
 void	free_map(char **map);
 void	free_game(t_game *game);
