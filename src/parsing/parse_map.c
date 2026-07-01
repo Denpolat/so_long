@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 01:05:17 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/02 00:08:44 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/02 00:18:05 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,10 @@ static void	store_map(t_game *game, int fd, char *file_name)
 	game->nb_cols = ft_strlen(game->map[0]);
 }
 
-void	parse_map(char *file_name)
+void	parse_map(char *file_name, t_game *game)
 {
 	size_t len;
 	int		fd;
-	t_game	game;
 
 	len = ft_strlen(file_name);
 	if (!extension_check(file_name, len))
@@ -94,15 +93,14 @@ void	parse_map(char *file_name)
 		ft_putstr_fd("Error\nMauvaise extension\n", 2);
 		exit(1);
 	}
-	ft_memset(&game, 0, sizeof(t_game));
 	fd = open(file_name, O_RDONLY);
 	if (fd == -1)
 	{
 		ft_putstr_fd("Error\nimpossible d'ouvrir le fichier chef\n", 2);
 		exit(1);
 	}
-	store_map(&game, fd, file_name);
+	store_map(game, fd, file_name);
 	close(fd);
-	valid_map(&game);
-	free_game(&game);
+	valid_map(game);
+	free_game(game);
 }
