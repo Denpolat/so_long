@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/01 04:56:10 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/01 05:14:08 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/01 05:20:41 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	init_jeux(t_game *game)
 {
-	game->mix = mix_init();
-	if (!game->mix)
+	game->mlx = mlx_init();
+	if (!game->mlx)
 	{
 		ft_putstr_fd("Error\nmix_init a echoue cheh\n", 2);
 		free_game(game);

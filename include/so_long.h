@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 23:52:14 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/01 05:00:00 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/01 05:19:21 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_game
 	int		nb_collectibles;
 	int		nb_exit;
 	int		nb_player;
-	void	*mix;
+	void	*mlx;
 	void	*win;
 	int		movesamk;
 }	t_game;
