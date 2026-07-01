@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 01:05:17 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/01 05:31:55 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/02 00:08:44 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,47 +22,63 @@ static int	extension_check(char *file_name, int taille)
 		return (0);
 }
 
-static void	add_line(t_game *game, char *ligne, int i)
+static int	count_lignes(char *file_name)
 {
-	char	**tmp;
-	int		len;
+	int		fd;
+	char	*lignes;
+	int		count;
+
+	fd = open(file_name, O_RDONLY);
+	if (fd < 0)
+		return (-1);
+	count = 0;
+	lignes = get_next_line(fd);
+	while (lignes != NULL)
+	{
+		count++;
+		free(lignes);
+		lignes = get_next_line(fd);
+	}
+	close(fd);
+	return (count);
+}
+
+static void	enleve_newlineptn(char *ligne)
+{
+	int	len;
 
 	len = ft_strlen(ligne);
 	if (len > 0 && ligne[len - 1] == '\n')
 		ligne[len - 1] = '\0';
-	tmp = realloc(game->map, sizeof(char *) * (i + 2));
-	if (tmp == NULL)
-	{
-		free(ligne);
-		free_map(game->map);
-		ft_putstr_fd("Error\nrealloc echoue zebi\n", 2);
-		exit(1);
-	}
-	game->map = tmp;
-	game->map[i] = ligne;
-	game->map[i + 1] = NULL;
+
 }
 
-static void	store_map(t_game *game, int fd)
+static void	store_map(t_game *game, int fd, char *file_name)
 {
 	char	*ligne;
+	int		nb;
 	int		i;
 
-	game->map = NULL;
+	nb = count_lignes(file_name);
+	if (nb <= 0)
+	{
+		ft_putstr_fd("Error\nfichier vide zebi", 2);
+		exit(1);
+	}
+	game->map = malloc(sizeof(char *) * (nb + 1));
+	if (!game->map)
+		exit(1);
+	game->map[nb] = NULL;
 	i = 0;
 	ligne = get_next_line(fd);
 	while (ligne != NULL)
 	{
-		add_line(game, ligne, i);
+		enleve_newlineptn(ligne);
+		game->map[i] = ligne;
 		i++;
 		ligne = get_next_line(fd);
 	}
-	if (i == 0)
-	{
-		ft_putstr_fd("Error\nfichier vide chakal\n", 2);
-		exit(1);
-	}
-	game->nb_lignes = i;
+	game->nb_lignes = nb;
 	game->nb_cols = ft_strlen(game->map[0]);
 }
 
@@ -85,7 +101,7 @@ void	parse_map(char *file_name)
 		ft_putstr_fd("Error\nimpossible d'ouvrir le fichier chef\n", 2);
 		exit(1);
 	}
-	store_map(&game, fd);
+	store_map(&game, fd, file_name);
 	close(fd);
 	valid_map(&game);
 	free_game(&game);
