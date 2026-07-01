@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 01:05:17 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/01 02:21:37 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/01 04:44:54 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,5 @@ void	parse_map(char *file_name)
 	store_map(&game, fd);
 	close(fd);
 	valid_map(&game);
-	free_map(&game);
+	free_game(&game);
 }

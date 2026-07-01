@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/30 21:02:00 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/01 04:31:47 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/01 04:44:08 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ static void	floodptn(t_game *game, int x, int y)
 	if (game->copy[y][x] == '1' || game->copy[y][x] == 'F')
 		return ;
 	game->copy[y][x] = 'F';
-	flodd(game, x + 1, y);
-	flodd(game, x - 1, y);
-	flood(game, x, y + 1);
-	flood(game, x, y - 1);
+	floodptn(game, x + 1, y);
+	floodptn(game, x - 1, y);
+	floodptn(game, x, y + 1);
+	floodptn(game, x, y - 1);
 }
 
 int	flood_fill(t_game *game)
@@ -67,7 +67,7 @@ int	flood_fill(t_game *game)
 	int	j;
 
 	copy_map(game);
-	flood(game, game->player_x, game->player_y);
+	floodptn(game, game->player_x, game->player_y);
 	i = 0;
 	while (game->copy[i] != NULL)
 	{
