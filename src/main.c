@@ -6,7 +6,7 @@
 /*   By: denpolat <denpolat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 00:36:00 by denpolat          #+#    #+#             */
-/*   Updated: 2026/07/02 00:15:31 by denpolat         ###   ########.fr       */
+/*   Updated: 2026/07/02 03:49:59 by denpolat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,5 @@ int main(int ac, char **av)
 	}
 	ft_memset(&game, 0, sizeof(t_game));
 	parse_map(av[1], &game);
+	init_jeux(&game);
 }
